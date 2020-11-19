@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TUD AutoLogin
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.2.1
 // @description  Stop wasting your time entering login credentials or pressing useless buttons!
 // @source       spyfly
 // @website      https://github.com/spyfly/TUD-AutoLogin
@@ -21,20 +21,28 @@
   }
 
   // Code starts here
-  const isOpalLoginPage = (document.getElementsByName("shibLogin").length >= 1);
+  const isOpalLoginPage = (window.location.host == "bildungsportal.sachsen.de");
   const isTudLoginPage = (window.location.host == "idp2.tu-dresden.de")
   const isJExam = (window.location.host == "jexam.inf.tu-dresden.de")
 
   const credentialsAvailable = (tud.username.length > 0 && tud.password.length > 0);
 
   if (isOpalLoginPage) {
-    //Select TUD if it hasn't been selected yet
-    if (document.getElementsByName("wayfselection")[0].selectedIndex == 0) {
-      document.getElementsByName("wayfselection")[0].selectedIndex = 19;
-    }
+    //Click Login Button on mainpage
+    if (document.getElementsByName("shibLogin").length >= 1) {
+      //Select TUD if it hasn't been selected yet
+      if (document.getElementsByName("wayfselection")[0].selectedIndex == 0) {
+        document.getElementsByName("wayfselection")[0].selectedIndex = 19;
+      }
 
-    //Press Login Button on OPAL Page
-    document.getElementsByName("shibLogin")[0].click();
+      //Press Login Button on OPAL Page
+      document.getElementsByName("shibLogin")[0].click();
+    } else if (document.getElementsByClassName("login")[0] != undefined) {
+      document.getElementsByClassName("login")[0].parentElement.click();
+      setTimeout(function(){
+        document.getElementsByName("content:container:login:shibAuthForm:shibLogin")[0].click();
+      }, 500);
+    }
   } else if (isTudLoginPage) {
     // We are on the TUD I2DP Page
     const hasLoginField = (document.getElementById("username") != undefined);
@@ -59,7 +67,7 @@
       document.getElementById("username").value = tud.username;
       document.getElementById("password").value = tud.password;
       if (credentialsAvailable) {
-        document.getElementsByClassName("submit")[0].click()      
+        document.getElementsByClassName("submit")[0].click();
       }
     }
   }
