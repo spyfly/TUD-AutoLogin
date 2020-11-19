@@ -1,4 +1,4 @@
-# OPAL AutoLogin
+# TUD AutoLogin
 
 This is a browser script, that performs an automatic login for the following TU Dresden web services:
 - [OPAL](https://bildungsportal.sachsen.de/opal)
