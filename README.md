@@ -6,7 +6,7 @@ This is a browser script, that performs an automatic login for the following TU 
 
 ## Installation
 1. Download the [Tampermonkey Extension](https://www.tampermonkey.net) for your Browser
-2. Install the script by [clicking here](https://raw.githubusercontent.com/spyfly/TUD-AutoLogin/script.js)
+2. Install the script by [clicking here](https://raw.githubusercontent.com/spyfly/TUD-AutoLogin/master/script.js)
 3. (Optional) Add your TUD Credentials to the configuration in the script file
 
 ## Usage
