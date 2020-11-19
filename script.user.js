@@ -7,7 +7,7 @@
 // @website      https://github.com/spyfly/TUD-AutoLogin
 // @match        https://bildungsportal.sachsen.de/*
 // @match        https://idp2.tu-dresden.de/*
-// @updateURL    https://raw.githubusercontent.com/spyfly/TUD-AutoLogin/master/script.js
+// @updateURL    https://raw.githubusercontent.com/spyfly/TUD-AutoLogin/master/script.user.js
 // @grant        none
 // ==/UserScript==
 
