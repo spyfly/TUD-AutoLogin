@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         TUD AutoLogin
 // @namespace    http://tampermonkey.net/
-// @version      0.2.1
+// @version      0.2.2
 // @description  Stop wasting your time entering login credentials or pressing useless buttons!
 // @source       spyfly
 // @website      https://github.com/spyfly/TUD-AutoLogin
 // @match        https://bildungsportal.sachsen.de/*
 // @match        https://idp2.tu-dresden.de/*
 // @match        https://jexam.inf.tu-dresden.de/*
+// @match        https://selma.tu-dresden.de/*
 // @updateURL    https://raw.githubusercontent.com/spyfly/TUD-AutoLogin/master/script.user.js
 // @grant        none
 // ==/UserScript==
@@ -22,8 +23,9 @@
 
   // Code starts here
   const isOpalLoginPage = (window.location.host == "bildungsportal.sachsen.de");
-  const isTudLoginPage = (window.location.host == "idp2.tu-dresden.de")
-  const isJExam = (window.location.host == "jexam.inf.tu-dresden.de")
+  const isTudLoginPage = (window.location.host == "idp2.tu-dresden.de");
+  const isJExam = (window.location.host == "jexam.inf.tu-dresden.de");
+  const isSelma = (window.location.host == "selma.tu-dresden.de");
 
   const credentialsAvailable = (tud.username.length > 0 && tud.password.length > 0);
 
@@ -68,6 +70,15 @@
       document.getElementById("password").value = tud.password;
       if (credentialsAvailable) {
         document.getElementsByClassName("submit")[0].click();
+      }
+    }
+  } else if (isSelma) {
+    // AutoLogin for selma
+    if (document.getElementById("field_user") != undefined) {
+      document.getElementById("field_user").value = tud.username;
+      document.getElementById("field_pass").value = tud.password;
+      if (credentialsAvailable) {
+        document.getElementById("logIn_btn").click();
       }
     }
   }
