@@ -2,6 +2,7 @@
 
 This is a browser script, that performs an automatic login for the following TU Dresden web services:
 - [OPAL](https://bildungsportal.sachsen.de/opal)
+- [jExam 5](https://jexam.inf.tu-dresden.de/)
 - and any other service with the TUD Login Page
 
 ## Installation
