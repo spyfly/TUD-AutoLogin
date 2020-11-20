@@ -21,13 +21,13 @@ Compatible Platforms:
 - Windows
 - Linux
 - MacOS
-- Android (tested with [Firefox Nightly](https://blog.mozilla.org/addons/2020/09/29/expanded-extension-support-in-firefox-for-android-nightly/)
-)
-
-I have plans to add iOS/iPadOS support.
+- Android (tested with [Firefox Nightly](https://blog.mozilla.org/addons/2020/09/29/expanded-extension-support-in-firefox-for-android-nightly/))
+- iOS/iPadOS via [Custom Shortcut](https://www.icloud.com/shortcuts/b3bef7f4836d461fb73bc3a39f9e3411) (Safari only)
 
 ## Usage
 Visit your favorite TUD websites and enjoy automatic login.
+
+On iOS/iPadOS you will have to run the [Custom Shortcut](https://www.icloud.com/shortcuts/b3bef7f4836d461fb73bc3a39f9e3411) via the Share Menu in Safari.
 
 ## Future development and issues
 If you have improvement ideas or encounter issues with the script don't hesitate to open a [new issue](https://github.com/spyfly/TUD-AutoLogin/issues). This could be a request for adding more supported services or reporting a bug.
