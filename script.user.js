@@ -1,27 +1,33 @@
 // ==UserScript==
 // @name         TUD AutoLogin
 // @namespace    http://tampermonkey.net/
-// @version      0.2.2
+// @version      0.3
 // @description  Stop wasting your time entering login credentials or pressing useless buttons!
 // @source       spyfly
-// @website      https://github.com/spyfly/TUD-AutoLogin
+// @website      https://tud-autologin.spyfly.xyz/
 // @match        https://bildungsportal.sachsen.de/*
 // @match        https://idp2.tu-dresden.de/*
 // @match        https://jexam.inf.tu-dresden.de/*
 // @match        https://selma.tu-dresden.de/*
+// @match        https://tud-autologin.spyfly.xyz/configuration/
 // @updateURL    https://raw.githubusercontent.com/spyfly/TUD-AutoLogin/master/script.user.js
-// @grant        none
+// @grant   GM_getValue
+// @grant   GM_setValue
 // ==/UserScript==
 
 (function() {
   'use strict';
-  // Enter your login creds here
-  const tud = {
+  //Load Configuration values
+  var tud = {
     username: "",
     password: ""
   }
+  if (GM_getValue("tud_creds") != undefined) {
+    tud = GM_getValue("tud_creds");
+  }
 
   // Code starts here
+  const isConfigPage = (window.location.host == "tud-autologin.spyfly.xyz");
   const isOpalLoginPage = (window.location.host == "bildungsportal.sachsen.de");
   const isTudLoginPage = (window.location.host == "idp2.tu-dresden.de");
   const isJExam = (window.location.host == "jexam.inf.tu-dresden.de");
@@ -29,7 +35,19 @@
 
   const credentialsAvailable = (tud.username.length > 0 && tud.password.length > 0);
 
-  if (isOpalLoginPage) {
+  if (isConfigPage) {
+    document.getElementById("notinstalled").remove();
+    document.getElementById("username").value = tud.username;
+    document.getElementById("password").value = tud.password;
+
+    document.getElementById("save").addEventListener("click", function(){
+      GM_setValue("tud_creds", {
+        username: document.getElementById("username").value, 
+        password: document.getElementById("password").value
+      });
+      alert("Configuration updated!")
+    });
+  } else if (isOpalLoginPage) {
     //Click Login Button on mainpage
     if (document.getElementsByName("shibLogin").length >= 1) {
       //Select TUD if it hasn't been selected yet
