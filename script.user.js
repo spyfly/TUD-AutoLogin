@@ -3,13 +3,14 @@
 // @namespace    http://tampermonkey.net/
 // @version      0.3
 // @description  Stop wasting your time entering login credentials or pressing useless buttons!
-// @source       spyfly
+// @author       spyfly
 // @website      https://tud-autologin.spyfly.xyz/
 // @match        https://bildungsportal.sachsen.de/*
 // @match        https://idp2.tu-dresden.de/*
 // @match        https://jexam.inf.tu-dresden.de/*
 // @match        https://selma.tu-dresden.de/*
 // @match        https://tud-autologin.spyfly.xyz/configuration/
+// @supportURL   https://github.com/spyfly/TUD-AutoLogin/issues
 // @updateURL    https://raw.githubusercontent.com/spyfly/TUD-AutoLogin/master/script.user.js
 // @grant   GM_getValue
 // @grant   GM_setValue
