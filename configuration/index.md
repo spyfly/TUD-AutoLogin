@@ -9,6 +9,6 @@ Username:
 Password:   
 <input type="password" id="password"/>
 
-<input type="button" value="Update"/>
+<input type="button" id="save" value="Update"/>
 
 Now you are ready to go!
