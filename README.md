@@ -4,6 +4,8 @@ This is a browser script, that performs an automatic login for the following TU 
 - [OPAL](https://bildungsportal.sachsen.de/opal)
 - [jExam 5](https://jexam.inf.tu-dresden.de/)
 - [selma](https://selma.tu-dresden.de)
+- [Exam@TUD](https://exam.zih.tu-dresden.de)
+- [HISQIS](https://qis.dez.tu-dresden.de/qisserver)
 - and any other service with the TUD Login Page
 
 ## Installation
