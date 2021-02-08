@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TUD AutoLogin
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.3.1
 // @description  Stop wasting your time entering login credentials or pressing useless buttons!
 // @author       spyfly
 // @website      https://tud-autologin.spyfly.xyz/
@@ -9,6 +9,10 @@
 // @match        https://idp2.tu-dresden.de/*
 // @match        https://jexam.inf.tu-dresden.de/*
 // @match        https://selma.tu-dresden.de/*
+// @match        https://exam.zih.tu-dresden.de/*
+// @match        https://exam2.zih.tu-dresden.de/*
+// @match        https://exam3.zih.tu-dresden.de/*
+// @match        https://qis.dez.tu-dresden.de/qisserver/*
 // @match        https://tud-autologin.spyfly.xyz/configuration/
 // @supportURL   https://github.com/spyfly/TUD-AutoLogin/issues
 // @updateURL    https://raw.githubusercontent.com/spyfly/TUD-AutoLogin/master/script.user.js
@@ -16,7 +20,7 @@
 // @grant   GM_setValue
 // ==/UserScript==
 
-(function() {
+(function () {
   'use strict';
   //Load Configuration values
   var tud = {
@@ -30,9 +34,11 @@
   // Code starts here
   const isConfigPage = (window.location.host == "tud-autologin.spyfly.xyz");
   const isOpalLoginPage = (window.location.host == "bildungsportal.sachsen.de");
+  const isTudExamLoginPage = (window.location.host.startsWith("exam") && window.location.host.endsWith(".zih.tu-dresden.de"));
   const isTudLoginPage = (window.location.host == "idp2.tu-dresden.de");
   const isJExam = (window.location.host == "jexam.inf.tu-dresden.de");
   const isSelma = (window.location.host == "selma.tu-dresden.de");
+  const isQisServer = (window.location.host == "qis.dez.tu-dresden.de");
 
   const credentialsAvailable = (tud.username.length > 0 && tud.password.length > 0);
 
@@ -41,18 +47,18 @@
     document.getElementById("username").value = tud.username;
     document.getElementById("password").value = tud.password;
 
-    document.getElementById("save").addEventListener("click", function(){
+    document.getElementById("save").addEventListener("click", function () {
       GM_setValue("tud_creds", {
-        username: document.getElementById("username").value, 
+        username: document.getElementById("username").value,
         password: document.getElementById("password").value
       });
       alert("Configuration updated!")
     });
-  } else if (isOpalLoginPage) {
+  } else if (isOpalLoginPage || isTudExamLoginPage) {
     //Click Login Button on mainpage
     if (document.getElementsByName("shibLogin").length >= 1) {
-      //Select TUD if it hasn't been selected yet
-      if (document.getElementsByName("wayfselection")[0].selectedIndex == 0) {
+      //Select TUD if it hasn't been selected yet (only for OPAL)
+      if (document.getElementsByName("wayfselection")[0].selectedIndex == 0 && isOpalLoginPage) {
         document.getElementsByName("wayfselection")[0].selectedIndex = 19;
       }
 
@@ -60,7 +66,7 @@
       document.getElementsByName("shibLogin")[0].click();
     } else if (document.getElementsByClassName("login")[0] != undefined) {
       document.getElementsByClassName("login")[0].parentElement.click();
-      setTimeout(function(){
+      setTimeout(function () {
         document.getElementsByName("content:container:login:shibAuthForm:shibLogin")[0].click();
       }, 500);
     }
@@ -98,6 +104,15 @@
       document.getElementById("field_pass").value = tud.password;
       if (credentialsAvailable) {
         document.getElementById("logIn_btn").click();
+      }
+    }
+  } else if (isQisServer) {
+    //AutoLogin for QISServer
+    if (document.getElementsByClassName("loginuser").length >= 1) {
+      document.getElementsByClassName("loginuser")[0].value = tud.username;
+      document.getElementsByClassName("loginpass")[0].value = tud.password;
+      if (credentialsAvailable) {
+        document.getElementsByClassName("submit")[0].click();
       }
     }
   }
