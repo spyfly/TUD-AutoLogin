@@ -14,7 +14,7 @@
 // @match        https://exam3.zih.tu-dresden.de/*
 // @match        https://qis.dez.tu-dresden.de/qisserver/*
 // @match        https://msx.tu-dresden.de/owa/auth/logon*
-// @match        https://lskonline.tu-dresden.de/lskonline/de/102.0.1
+// @match        https://lskonline.tu-dresden.de/lskonline/de/102.0.1*
 // @match        https://tud-autologin.spyfly.xyz/configuration/
 // @supportURL   https://github.com/spyfly/TUD-AutoLogin/issues
 // @updateURL    https://raw.githubusercontent.com/spyfly/TUD-AutoLogin/master/script.user.js
