@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TUD AutoLogin
 // @namespace    http://tampermonkey.net/
-// @version      0.3.1
+// @version      0.3.2
 // @description  Stop wasting your time entering login credentials or pressing useless buttons!
 // @author       spyfly
 // @website      https://tud-autologin.spyfly.xyz/
@@ -13,6 +13,8 @@
 // @match        https://exam2.zih.tu-dresden.de/*
 // @match        https://exam3.zih.tu-dresden.de/*
 // @match        https://qis.dez.tu-dresden.de/qisserver/*
+// @match        https://msx.tu-dresden.de/owa/auth/logon*
+// @match        https://lskonline.tu-dresden.de/lskonline/de/102.0.1
 // @match        https://tud-autologin.spyfly.xyz/configuration/
 // @supportURL   https://github.com/spyfly/TUD-AutoLogin/issues
 // @updateURL    https://raw.githubusercontent.com/spyfly/TUD-AutoLogin/master/script.user.js
@@ -39,6 +41,8 @@
   const isJExam = (window.location.host == "jexam.inf.tu-dresden.de");
   const isSelma = (window.location.host == "selma.tu-dresden.de");
   const isQisServer = (window.location.host == "qis.dez.tu-dresden.de");
+  const isOWA = (window.location.host == "msx.tu-dresden.de");
+  const isLskOnline = (window.location.host == "lskonline.tu-dresden.de");
 
   const credentialsAvailable = (tud.username.length > 0 && tud.password.length > 0);
 
@@ -114,6 +118,20 @@
       if (credentialsAvailable) {
         document.getElementsByClassName("submit")[0].click();
       }
+    }
+  } else if (isOWA) {
+    //AutoLogin for OWA
+    document.getElementById('username').value = tud.username;
+    document.getElementById('password').value = tud.password;
+    if (credentialsAvailable) {
+      document.getElementsByClassName("signinbutton")[0].click();
+    }
+  } else if (isLskOnline) {
+    //AutoLogin for LSKOnline
+    document.getElementsByName('j_username')[0].value = tud.username;
+    document.getElementsByName('j_password')[0].value = tud.password;
+    if (credentialsAvailable) {
+      document.getElementsByName('submit')[0].click();
     }
   }
 })();
