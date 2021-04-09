@@ -59,21 +59,36 @@
       alert("Configuration updated!")
     });
   } else if (isOpalLoginPage || isTudExamLoginPage) {
-    //Click Login Button on mainpage
-    if (document.getElementsByName("shibLogin").length >= 1) {
-      //Select TUD if it hasn't been selected yet (only for OPAL)
-      if (document.getElementsByName("wayfselection")[0].selectedIndex == 0 && isOpalLoginPage) {
-        document.getElementsByName("wayfselection")[0].selectedIndex = 19;
-      }
-
-      //Press Login Button on OPAL Page
-      document.getElementsByName("shibLogin")[0].click();
-    } else if (document.getElementsByClassName("login")[0] != undefined) {
-      document.getElementsByClassName("login")[0].parentElement.click();
-      setTimeout(function () {
-        document.getElementsByName("content:container:login:shibAuthForm:shibLogin")[0].click();
-      }, 500);
+    if (isOpalLoginPage && document.getElementsByClassName("login").length > 0) {
+        // Redirect to the login page with similar element names as exam
+        window.location.replace("https://bildungsportal.sachsen.de/opal/login");
     }
+    var selectElements = document.getElementsByName("wayfselection");
+    if (selectElements.length > 0) {
+      // Select TUD if it hasn't been selected yet
+
+      // Search for the index
+      var index = 0;
+      for (var i = 0; i < selectElements[0].options.length; i++) {
+          var option = selectElements[0].options[i];
+          if (option.text === "TU Dresden") {
+              index = option.index;
+              break;
+          }
+      }
+      // Select the option
+      for (i = 0; i < selectElements.length; i++) {
+          if (selectElements[i].selectedIndex != index) {
+            selectElements[i].selectedIndex = index;
+          }
+      }
+    }
+    var loginButton = document.getElementsByName("shibLogin")[0];
+    loginButton.click();
+
+    setTimeout(function () {
+        document.getElementsByName("content:container:login:shibAuthForm:shibLogin")[0].click();
+    }, 500);
   } else if (isTudLoginPage) {
     // We are on the TUD I2DP Page
     const hasLoginField = (document.getElementById("username") != undefined);
