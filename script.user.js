@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TUD AutoLogin
 // @namespace    http://tampermonkey.net/
-// @version      0.3.2
+// @version      0.3.3
 // @description  Stop wasting your time entering login credentials or pressing useless buttons!
 // @author       spyfly
 // @website      https://tud-autologin.spyfly.xyz/
@@ -22,7 +22,7 @@
 // @grant   GM_setValue
 // ==/UserScript==
 
-(function () {
+(async function () {
   'use strict';
   //Load Configuration values
   var tud = {
@@ -59,20 +59,34 @@
       alert("Configuration updated!")
     });
   } else if (isOpalLoginPage || isTudExamLoginPage) {
-    //Click Login Button on mainpage
-    if (document.getElementsByName("shibLogin").length >= 1) {
-      //Select TUD if it hasn't been selected yet (only for OPAL)
-      if (document.getElementsByName("wayfselection")[0].selectedIndex == 0 && isOpalLoginPage) {
-        document.getElementsByName("wayfselection")[0].selectedIndex = 19;
+    const mainPageLoginBtn = document.querySelector("button[name=shibLogin]");
+    const contentPageLoginBtn = document.querySelector('.btn-sm[title="Login"]');
+    var loginSelector = document.querySelector("select[name$='wayfselection']");
+    var loginIndex;
+
+    //Do we have to perform login action in the first place?
+    if (mainPageLoginBtn || contentPageLoginBtn) {
+      if (contentPageLoginBtn) {
+
+        contentPageLoginBtn.click();
+        // Wait for Login Prompt to appear
+        while (loginSelector == null) {
+          loginSelector = document.querySelector("select[name$='wayfselection']");
+          await sleep(100);
+        }
       }
 
-      //Press Login Button on OPAL Page
-      document.getElementsByName("shibLogin")[0].click();
-    } else if (document.getElementsByClassName("login")[0] != undefined) {
-      document.getElementsByClassName("login")[0].parentElement.click();
-      setTimeout(function () {
-        document.getElementsByName("content:container:login:shibAuthForm:shibLogin")[0].click();
-      }, 500);
+      // Select TU-Dresden as Login Option
+      for (const option of loginSelector.options) {
+        if (option.text == "TU Dresden") {
+          loginIndex = option.index;
+          break;
+        }
+      }
+      loginSelector.selectedIndex = loginIndex;
+
+      //Press Login Button
+      document.querySelector("button[name$='shibLogin']").click();
     }
   } else if (isTudLoginPage) {
     // We are on the TUD I2DP Page
@@ -135,3 +149,7 @@
     }
   }
 })();
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
