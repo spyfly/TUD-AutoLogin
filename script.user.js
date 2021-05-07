@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TUD AutoLogin
 // @namespace    http://tampermonkey.net/
-// @version      0.3.3
+// @version      0.3.4
 // @description  Stop wasting your time entering login credentials or pressing useless buttons!
 // @author       spyfly
 // @website      https://tud-autologin.spyfly.xyz/
@@ -15,6 +15,7 @@
 // @match        https://qis.dez.tu-dresden.de/qisserver/*
 // @match        https://msx.tu-dresden.de/owa/auth/logon*
 // @match        https://lskonline.tu-dresden.de/lskonline/de/102.0.1*
+// @match        https://idp.tu-dresden.de/idp*
 // @match        https://tud-autologin.spyfly.xyz/configuration/
 // @supportURL   https://github.com/spyfly/TUD-AutoLogin/issues
 // @updateURL    https://raw.githubusercontent.com/spyfly/TUD-AutoLogin/master/script.user.js
@@ -43,6 +44,7 @@
   const isQisServer = (window.location.host == "qis.dez.tu-dresden.de");
   const isOWA = (window.location.host == "msx.tu-dresden.de");
   const isLskOnline = (window.location.host == "lskonline.tu-dresden.de");
+  const isTudIdp = (window.location.host == "idp.tu-dresden.de");
 
   const credentialsAvailable = (tud.username.length > 0 && tud.password.length > 0);
 
@@ -88,7 +90,7 @@
       //Press Login Button
       document.querySelector("button[name$='shibLogin']").click();
     }
-  } else if (isTudLoginPage) {
+  } else if (isTudLoginPage || isTudIdp) {
     // We are on the TUD I2DP Page
     const hasLoginField = (document.getElementById("username") != undefined);
 
