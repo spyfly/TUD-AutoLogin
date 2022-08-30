@@ -8,6 +8,7 @@ This is a browser script, that performs an automatic login for the following TU 
 - [HISQIS](https://qis.dez.tu-dresden.de/qisserver)
 - [Mailbox@TUD](https://msx.tu-dresden.de/owa)
 - [LSKOnline](https://lskonline.tu-dresden.de)
+- [ShareLaTeX](https://tex.zih.tu-dresden.de)
 - and any other service with the TUD Login Page
 
 ## Installation

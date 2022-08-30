@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TUD AutoLogin
 // @namespace    http://tampermonkey.net/
-// @version      0.3.4
+// @version      0.3.5
 // @description  Stop wasting your time entering login credentials or pressing useless buttons!
 // @author       spyfly
 // @website      https://tud-autologin.spyfly.xyz/
@@ -17,6 +17,7 @@
 // @match        https://lskonline.tu-dresden.de/lskonline/de/102.0.1*
 // @match        https://idp.tu-dresden.de/idp*
 // @match        https://tud-autologin.spyfly.xyz/configuration/
+// @match        https://tex.zih.tu-dresden.de/*
 // @supportURL   https://github.com/spyfly/TUD-AutoLogin/issues
 // @updateURL    https://raw.githubusercontent.com/spyfly/TUD-AutoLogin/master/script.user.js
 // @grant   GM_getValue
@@ -45,6 +46,7 @@
   const isOWA = (window.location.host == "msx.tu-dresden.de");
   const isLskOnline = (window.location.host == "lskonline.tu-dresden.de");
   const isTudIdp = (window.location.host == "idp.tu-dresden.de");
+  const isShareLatex = (window.location.host == "tex.zih.tu-dresden.de");
 
   const credentialsAvailable = (tud.username.length > 0 && tud.password.length > 0);
 
@@ -148,6 +150,18 @@
     document.getElementsByName('j_password')[0].value = tud.password;
     if (credentialsAvailable) {
       document.getElementsByName('submit')[0].click();
+    }
+  } else if (isShareLatex) {
+    //AutoLogin for ShareLaTeX
+    if (window.location.pathname == "/saml/login") {
+      // Check if we are on the login page
+      document.querySelector('[href="/saml/login/go"]').click();
+    } else {
+      //Go to the login page if we need to login
+      const loginBtn = document.querySelector('[href="/login"]');
+      if (loginBtn) {
+        loginBtn.click();
+      }
     }
   }
 })();
