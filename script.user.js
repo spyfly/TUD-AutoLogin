@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         TUD AutoLogin
+// @name         TUD AutoLogin with 2FA
 // @namespace    http://tampermonkey.net/
-// @version      0.3.5
-// @description  Stop wasting your time entering login credentials or pressing useless buttons!
-// @author       spyfly
-// @website      https://tud-autologin.spyfly.xyz/
+// @version      0.4.1
+// @description  Stop wasting your time entering login credentials or pressing useless buttons! (updated from spyfly)
+// @author       FurTactics
+// @icon         https://upload.wikimedia.org/wikipedia/commons/a/a3/Logo_TU_Dresden_small.svg
 // @match        https://bildungsportal.sachsen.de/*
 // @match        https://idp2.tu-dresden.de/*
 // @match        https://jexam.inf.tu-dresden.de/*
@@ -18,10 +18,9 @@
 // @match        https://idp.tu-dresden.de/idp*
 // @match        https://tud-autologin.spyfly.xyz/configuration/
 // @match        https://tex.zih.tu-dresden.de/*
-// @supportURL   https://github.com/spyfly/TUD-AutoLogin/issues
-// @updateURL    https://raw.githubusercontent.com/spyfly/TUD-AutoLogin/master/script.user.js
-// @grant   GM_getValue
-// @grant   GM_setValue
+// @match        https://tud.uni-leipzig.de/moodle2/*
+// @grant        GM_getValue
+// @grant        GM_setValue
 // ==/UserScript==
 
 (async function () {
@@ -47,6 +46,7 @@
   const isLskOnline = (window.location.host == "lskonline.tu-dresden.de");
   const isTudIdp = (window.location.host == "idp.tu-dresden.de");
   const isShareLatex = (window.location.host == "tex.zih.tu-dresden.de");
+  const isMoodle = (window.location.host == "tud.uni-leipzig.de")
 
   const credentialsAvailable = (tud.username.length > 0 && tud.password.length > 0);
 
@@ -95,6 +95,7 @@
   } else if (isTudLoginPage || isTudIdp) {
     // We are on the TUD I2DP Page
     const hasLoginField = (document.getElementById("username") != undefined);
+    const hasSecretField = (document.getElementById("fudis_otp_input") != undefined);
 
     if (hasLoginField) {
       // Try to fill in credentials
@@ -103,9 +104,25 @@
       if (credentialsAvailable) {
         document.getElementsByName("_eventId_proceed")[0].click();
       }
-    } else {
-      // Just press the continue button
-      document.getElementsByName("_eventId_proceed")[0].click();
+    }
+    if (hasSecretField) {
+
+      //this setup works with either keyboard input or, for example, 2FAS browser extension
+      let typingTimer; //timer identifier
+      let doneTypingInterval = 2000; //time in ms (2 seconds)
+      let myInput = document.getElementById('fudis_otp_input');
+
+      //on keyup, start the countdown
+      myInput.addEventListener('keypress', evt => {
+        clearTimeout(typingTimer);
+        if (myInput.value) {
+          typingTimer = setTimeout(doneTyping, doneTypingInterval);
+        }
+      });
+      //user is "finished typing," do click
+      function doneTyping() {
+        document.getElementsByName("_eventId_proceed")[0].click();
+      }
     }
   } else if (isJExam) {
     // AutoLogin for JExam 5
@@ -126,6 +143,18 @@
       document.getElementById("field_pass").value = tud.password;
       if (credentialsAvailable) {
         document.getElementById("logIn_btn").click();
+      }
+    }
+  } else if (isMoodle) {
+    // AutoLogin for Moodle
+    if (window.location.pathname == "/moodle2/login/index.php") {
+      // Check if we are on the login page
+      document.querySelector('[href="https://tud.uni-leipzig.de/moodle2/auth/shibboleth/index.php"]').click();
+    } else {
+      //Go to the login page if we need to login
+      const loginBtn = document.querySelector('[href="https://tud.uni-leipzig.de/moodle2/login/index.php"]');
+      if (loginBtn) {
+        loginBtn.click();
       }
     }
   } else if (isQisServer) {
